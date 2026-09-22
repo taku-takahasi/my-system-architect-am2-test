@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>システムアーキテクト試験 午前II | 一問一答</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div>
+        <p class="eyebrow">令和7年度 春期</p>
+        <h1>システムアーキテクト試験 <span>午前II</span></h1>
+      </div>
+      <div class="score" aria-live="polite"><strong id="score">0</strong><span> / 25 正解</span></div>
+    </header>
+
+    <main class="layout">
+      <section class="quiz-panel" aria-label="問題">
+        <div class="progress-wrap">
+          <div class="progress-label"><span id="progressText">問1 / 25</span><span id="statusText">未回答</span></div>
+          <div class="progress"><div id="progressBar"></div></div>
+        </div>
+        <article id="questionCard" class="question-card"></article>
+        <nav class="pager" aria-label="問題ナビゲーション">
+          <button id="prevButton" class="secondary">前の問題</button>
+          <div id="dots" class="dots"></div>
+          <button id="nextButton" class="primary">次の問題</button>
+        </nav>
+      </section>
+
+      <aside class="source-panel">
+        <div class="source-heading">
+          <div><p class="eyebrow">参照資料</p><h2>問題冊子</h2></div>
+          <a href="2025r07h_sa_am2_qs.pdf" target="_blank" rel="noopener">別タブで開く ↗</a>
+        </div>
+        <object data="2025r07h_sa_am2_qs.pdf" type="application/pdf" aria-label="試験問題PDF">
+          <p>PDFを表示できません。<a href="2025r07h_sa_am2_qs.pdf">こちらから開いてください。</a></p>
+        </object>
+        <p class="source-note">問題文の図・数式は、必要に応じて元の問題冊子で確認できます。</p>
+      </aside>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
