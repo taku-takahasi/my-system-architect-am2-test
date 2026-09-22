@@ -36,6 +36,10 @@ h1 span { font-weight: 400; opacity: .8; }
 .text-question { margin: 13px 0 25px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #f7f9fb; }
 .original-label { color: var(--muted); background: #f1f5f8; border-bottom: 1px solid var(--line); padding: 8px 12px; font-size: .76rem; font-weight: 700; }
 .text-question .question-text { padding: 20px clamp(18px, 4vw, 34px) 8px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
+.question-table { width: 100%; margin: 18px 0 8px; border-collapse: collapse; background: white; white-space: normal; line-height: 1.45; }
+.question-table th, .question-table td { border: 1px solid var(--line); padding: 8px 10px; text-align: center; }
+.question-table thead th { background: #f1f5f8; font-weight: 700; }
+.question-table tbody th { width: 2.5em; background: #f7f9fb; }
 .diagram { display: block; width: min(100%, 620px); margin: 4px auto 18px; }
 .answer-instruction { color: var(--muted); font-size: .86rem; margin: 0 0 10px; }
 .choices { display: grid; gap: 11px; }
