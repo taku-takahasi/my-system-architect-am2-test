@@ -573,7 +573,7 @@ const sourceLink = document.querySelector("#sourceLink");
 const sourceFallback = document.querySelector("#sourceFallback");
 
 yearSelect.innerHTML = examSets.map(([id, label, pdf, ready]) =>
-  `<option value="${id}" ${ready ? "" : "data-pending"}>${label}${ready ? "" : "（問題ページ準備中）"}</option>`
+  `<option value="${id}" ${ready ? "" : "data-pending"}>${label}${id === "2020r02" ? "（試験未実施）" : ready ? "" : "（問題ページ準備中）"}</option>`
 ).join("");
 
 function updateSource() {
@@ -596,10 +596,13 @@ function updateSource() {
 function render() {
   if (!selectedExam[3]) {
     updateSource();
+    const notHeld = selectedExam[0] === "2020r02";
     progressText.textContent = "準備中";
-    statusText.textContent = "PDF参照のみ";
+    statusText.textContent = notHeld ? "試験未実施" : "PDF参照のみ";
     progressBar.style.width = "0%";
-    card.innerHTML = `<div class="question-number">${selectedExam[1]}</div><div class="pending-message"><h2>この年度の一問一答は準備中です</h2><p>右側の問題冊子PDFで問題を確認できます。問題文・解答・解説の整備が完了すると、1問ずつ解答できるようになります。</p></div>`;
+    card.innerHTML = notHeld
+      ? `<div class="question-number">${selectedExam[1]}</div><div class="pending-message"><h2>2020年度は試験未実施です</h2><p>令和2年度（2020年度）のシステムアーキテクト試験は実施されていないため、問題PDFと一問一答ページはありません。</p></div>`
+      : `<div class="question-number">${selectedExam[1]}</div><div class="pending-message"><h2>この年度の一問一答は準備中です</h2><p>右側の問題冊子PDFで問題を確認できます。問題文・解答・解説の整備が完了すると、1問ずつ解答できるようになります。</p></div>`;
     document.querySelector("#prevButton").disabled = true;
     document.querySelector("#nextButton").disabled = true;
     dots.innerHTML = "";
