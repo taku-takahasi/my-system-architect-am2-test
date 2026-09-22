@@ -55,7 +55,27 @@ const incorrectExplanations = [
 ];
 
 const keyToIndex = { "ア": 0, "イ": 1, "ウ": 2, "エ": 3 };
+const examSets = [
+  ["2025r07h", "令和7年度（2025年度）春期", "exam-pdfs/2025r07h_sa_am2_qs.pdf", true],
+  ["2024r06h", "令和6年度（2024年度）春期", "exam-pdfs/2024r06h_sa_am2_qs.pdf", false],
+  ["2023r05h", "令和5年度（2023年度）春期", "exam-pdfs/2023r05h_sa_am2_qs.pdf", false],
+  ["2022r04h", "令和4年度（2022年度）春期", "exam-pdfs/2022r04h_sa_am2_qs.pdf", false],
+  ["2021r03h", "令和3年度（2021年度）春期", "exam-pdfs/2021r03h_sa_am2_qs.pdf", false],
+  ["2020r02", "令和2年度（2020年度）", null, false],
+  ["2019h31a", "平成31年度（2019年度）春期", "exam-pdfs/2019r01a_sa_am2_qs.pdf", false],
+  ["2018h30a", "平成30年度（2018年度）秋期", "exam-pdfs/2018h30a_sa_am2_qs.pdf", false],
+  ["2017h29a", "平成29年度（2017年度）秋期", "exam-pdfs/2017h29a_sa_am2_qs.pdf", false],
+  ["2016h28a", "平成28年度（2016年度）秋期", "exam-pdfs/2016h28a_sa_am2_qs.pdf", false],
+  ["2015h27a", "平成27年度（2015年度）秋期", "exam-pdfs/2015h27a_sa_am2_qs.pdf", false],
+  ["2014h26a", "平成26年度（2014年度）秋期", "exam-pdfs/2014h26a_sa_am2_qs.pdf", false],
+  ["2013h25a", "平成25年度（2013年度）秋期", "exam-pdfs/2013h25a_sa_am2_qs.pdf", false],
+  ["2012h24a", "平成24年度（2012年度）秋期", "exam-pdfs/2012h24a_sa_am2_qs.pdf", false],
+  ["2011h23a", "平成23年度（2011年度）秋期", "exam-pdfs/2011h23a_sa_am2_qs.pdf", false],
+  ["2010h22a", "平成22年度（2010年度）秋期", "exam-pdfs/2010h22a_sa_am2_qs.pdf", false],
+  ["2009h21a", "平成21年度（2009年度）秋期", "exam-pdfs/2009h21a_sa_am2_qs.pdf", false]
+];
 let current = 0;
+let selectedExam = examSets[0];
 const answers = Array(questions.length).fill(null);
 
 const card = document.querySelector("#questionCard");
@@ -64,8 +84,47 @@ const progressText = document.querySelector("#progressText");
 const statusText = document.querySelector("#statusText");
 const progressBar = document.querySelector("#progressBar");
 const dots = document.querySelector("#dots");
+const yearSelect = document.querySelector("#yearSelect");
+const examLabel = document.querySelector("#examLabel");
+const sourcePdf = document.querySelector("#sourcePdf");
+const sourceLink = document.querySelector("#sourceLink");
+const sourceFallback = document.querySelector("#sourceFallback");
+
+yearSelect.innerHTML = examSets.map(([id, label, pdf, ready]) =>
+  `<option value="${id}" ${ready ? "" : "data-pending"}>${label}${ready ? "" : "（問題ページ準備中）"}</option>`
+).join("");
+
+function updateSource() {
+  const [, label, pdf, ready] = selectedExam;
+  examLabel.textContent = label;
+  if (pdf) {
+    sourcePdf.data = pdf;
+    sourceLink.href = pdf;
+    sourceFallback.href = pdf;
+    sourceLink.hidden = false;
+  } else {
+    sourcePdf.removeAttribute("data");
+    sourceLink.hidden = true;
+    sourceFallback.removeAttribute("href");
+  }
+  document.title = `システムアーキテクト試験 ${label} | 一問一答`;
+  return ready;
+}
 
 function render() {
+  if (!selectedExam[3]) {
+    updateSource();
+    progressText.textContent = "準備中";
+    statusText.textContent = "PDF参照のみ";
+    progressBar.style.width = "0%";
+    card.innerHTML = `<div class="question-number">${selectedExam[1]}</div><div class="pending-message"><h2>この年度の一問一答は準備中です</h2><p>右側の問題冊子PDFで問題を確認できます。問題文・解答・解説の整備が完了すると、1問ずつ解答できるようになります。</p></div>`;
+    document.querySelector("#prevButton").disabled = true;
+    document.querySelector("#nextButton").disabled = true;
+    dots.innerHTML = "";
+    score.textContent = "0";
+    return;
+  }
+  updateSource();
   const [text, choices, correct, explanation] = questions[current];
   const choiceExplanations = incorrectExplanations[current];
   const submitted = answers[current] !== null;
@@ -114,4 +173,10 @@ function renderDots() {
 
 document.querySelector("#prevButton").addEventListener("click", () => { if (current > 0) { current--; render(); } });
 document.querySelector("#nextButton").addEventListener("click", () => { if (current < questions.length - 1) { current++; render(); } });
+yearSelect.addEventListener("change", () => {
+  selectedExam = examSets.find(([id]) => id === yearSelect.value) || examSets[0];
+  current = 0;
+  answers.fill(null);
+  render();
+});
 render();
