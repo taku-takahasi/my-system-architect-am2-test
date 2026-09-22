@@ -54,10 +54,42 @@ const incorrectExplanations = [
   ["ゲートウェイは異なるプロトコル間を接続する装置です。", "正解です。", "ルータはネットワーク層（レイヤー3）でパケットを中継します。", "リピータは信号を増幅・再生する物理層の装置です。"]
 ];
 
+const questions2024 = [
+  ["アジャイル開発プロセスにおいて、Bill Wakeが提案した“INVEST”と呼ばれる六つの観点を用いて行うことはどれか。", ["効率よくアクティビティ図を作成する。", "コード化できるレベルまで詳細化されたデータフロー図を作成する。", "再利用しやすいソフトウェアパターンとなっているかどうかを評価する。", "質の高いユーザーストーリーとなっているかどうかを評価する。"], "エ", "INVESTは、独立・交渉可能・価値がある・見積可能・小さい・テスト可能なユーザーストーリーの観点です。"],
+  ["組込みシステムで用いるインプロセスデータベースの説明として適切なものはどれか。", ["クライアントサーバ形式でソケットを介して通信する。", "データベースエンジンがライブラリとして提供され、アプリケーションと同一メモリ空間で動作する。", "テーブル全体をメモリ上に配置する。", "一つのテーブルを一つのファイルで管理し、ファイル入出力APIで操作する。"], "イ", "インプロセスデータベースは、データベースエンジンをアプリケーションに組み込み、同一プロセス・メモリ空間で動作させます。"],
+  ["マイクロサービスへのリクエストのエラーが設定回数を超えた場合、障害解消までリクエストを送らない方式は何か。", ["CQRS", "RPC", "サーキットブレーカー", "サービスディスカバリー"], "ウ", "サーキットブレーカーは、連続した障害を検知すると回路を開き、呼出し先へのリクエストを一時停止します。"],
+  ["オブジェクト指向におけるデザインパターンの説明として適切なものはどれか。", ["共通する性質を抽出して一般化したクラスを定義する。", "同じ性質をもつオブジェクト群をクラスとして抽象化する。", "データを隠蔽し、仕様と実装を分離する。", "設計上の典型的な問題と解決策を示し、再利用できるようにする。"], "エ", "デザインパターンは、設計で繰り返し現れる問題と解決策を整理したものです。"],
+  ["モジュール間のデータ受渡し方法のうち、最も低いモジュール結合度となるものはどれか。", ["単一のデータ項目を大域的データで受け渡す。", "単一のデータ項目を引数で受け渡す。", "データ構造を大域的データで受け渡す。", "データ構造を引数で受け渡す。"], "イ", "データ項目を引数で渡すデータ結合は、共有データや不要な構造に依存せず、最も弱い結合です。"],
+  ["実行中の特定時点で成立すべき変数間の関係や条件を論理式として埋め込み、プログラムの正当性を検証する手法はどれか。", ["アサーションチェック", "コード追跡", "スナップショットダンプ", "テストカバレッジ分析"], "ア", "アサーションは、実行時に成立すべき条件を検査し、条件違反を検出します。"],
+  ["共通モジュールを呼び出す処理を各プログラムに直接記述せず、呼出し方の宣言を共通プログラムなどに記述することで開発・保守性を高める技法はどれか。", ["アスペクト指向プログラミング", "オブジェクト指向プログラミング", "関数型プログラミング", "構造化プログラミング"], "ア", "アスペクト指向は、ログ出力などの横断的関心事を本体の処理から分離して組み合わせます。"],
+  ["純粋関数型言語の参照透過性の説明はどれか。", ["同じ引数を渡せば、関数は常に同じ結果を返す。", "関数を引数や返却値にできる。", "コンパイル時に型検査を行う。", "必要になるまで式を評価しない。"], "ア", "参照透過性は、式をその評価結果で置き換えてもプログラムの意味が変わらない性質です。"],
+  ["論理型プログラミングにおいて、命題の証明を行うための基本的な機能はどれか。", ["オーバーライド", "オーバーロード", "メッセージパッシング", "ユニフィケーション"], "エ", "ユニフィケーションは、項を照合して変数に適切な値を束縛する機能です。"],
+  ["JIS X 0160:2021による移行プロセスで実施するタスクはどれか。", ["システムの利用・支援に必要な情報ニーズを識別し、文書と教育訓練を用意する。", "システム要素が明示された要件に合致することについて合意を得る。", "ソフトウェアが利害関係者ニーズに合致することについて合意を得る。", "統合ソフトウェアのインタフェースと機能の動作をチェックする。"], "ア", "移行プロセスでは、利用者向け文書や教育訓練を準備し、新システムへの移行を支援します。"],
+  ["JIS X 0160:2021による廃棄プロセスの説明として適切なものはどれか。", ["不十分な要素は廃棄せず再利用できるよう修正する。", "ソフトウェアシステムの廃棄にサービス終了は含まない。", "廃棄プロセスはライフサイクルのどの段階でも適用できる。", "プロトタイプの廃棄には適用されない。"], "ウ", "廃棄プロセスは、システムのライフサイクル中の任意の段階で適用され得ます。"],
+  ["リーンソフトウェア開発の説明として適切なものはどれか。", ["経験的プロセス制御に基づき、スプリントで検査と適応を繰り返す。", "製造業の考え方を適用し、ムダをなくす・品質を作り込むなど七つの原則を重視する。", "五つの価値を定義し、それらを高めるプロセスを策定する。", "機能単位ごとに五つのプロセスを繰り返す。"], "イ", "リーンソフトウェア開発は、トヨタ生産方式などの考え方をソフトウェア開発に適用したものです。"],
+  ["スタンフォード大学d.schoolによるデザイン思考の説明はどれか。", ["発散しないようテーマを制限して一つの解決策を探す。", "利用者との対話より過去データの分析を重視する。", "利用者を観察・理解し、共感から問題定義、アイデア、試作、試行を繰り返す。", "過去の問題と解決策をナレッジベースに蓄積する。"], "ウ", "デザイン思考は利用者中心で、共感・問題定義・アイデア創出・試作・テストを反復します。"],
+  ["WTO政府調達協定に関する記述として適切なものはどれか。", ["発注金額の基準額は加盟各国で同一である。", "政府調達の国際競争機会を増大させ、締約国間の問題を円滑に解決する。", "中央政府の案件だけに適用され、政府関係機関には適用されない。", "適用案件は政府公共調達データベースで検索できない。"], "イ", "協定は、政府調達における国際的な競争機会の拡大と紛争の円滑な解決を目的とします。"],
+  ["LSI設計を自社で行い、LSI製造を外部委託する場合の委託先はどれか。", ["IPプロバイダ", "デザインハウス", "ファウンドリ", "ファブレスメーカー"], "ウ", "ファウンドリは、設計済みの半導体を受託製造する企業です。"],
+  ["eシールの説明はどれか。", ["ゲーム内キャラクターのイメージデータの作成者を証明する。", "個人が電子文書の作成者証明と改ざん防止を行う電子署名である。", "公共機関だけが使用できる電子署名である。", "法人が作成した電子文書について、法人の真正性と非改ざんを証明する仕組みである。"], "エ", "eシールは、法人など組織が作成した電子データの真正性と改ざんされていないことを証明します。"],
+  ["デジタル署名のあるソフトウェアの発行元を確認するために使用する証明書はどれか。", ["EV SSL証明書", "クライアント証明書", "コードサイニング証明書", "サーバ証明書"], "ウ", "コードサイニング証明書は、ソフトウェアの発行元確認と改ざん検知に使用します。"],
+  ["NISTが制定したAESにおける鍵長の条件はどれか。", ["128ビット、192ビット、256ビットから選択する。", "256ビット未満で任意に指定する。", "ブロック長より32ビット長くする。", "ブロック長より32ビット短くする。"], "ア", "AESの鍵長は128、192、256ビットの三つです。"],
+  ["デジタル証明書の失効をオンラインで確認するプロトコルはどれか。", ["CHAP", "LDAP", "OCSP", "SNMP"], "ウ", "OCSPは、証明書の失効状態をオンラインで問い合わせるプロトコルです。"],
+  ["日本のITセキュリティ評価及び認証制度（JISEC）の対象はどれか。", ["利用者・管理者ガイダンスを除いた部分だけが評価用提供物件である。", "ハードウェア、ファームウェア、システムは対象外でソフトウェアだけが対象である。", "セキュリティ機能に特化した製品だけが対象である。", "保護資産、利用環境、適用すべき環境を具体化できるIT製品が対象である。"], "エ", "JISECは、保護対象資産や利用環境などを具体化できるIT製品を対象とします。"],
+  ["スーパースカラの説明として適切なものはどれか。", ["依存関係のない複数命令を動的に並列実行する。", "複数機能を埋め込んだ長い命令を実行する。", "パイプラインのステージを細分化する。", "一命令で複数データを処理する。"], "ア", "スーパースカラは、複数の実行ユニットで独立した命令を並列に実行します。"],
+  ["ストレージ仮想化技術のシンプロビジョニングの説明はどれか。", ["物理ストレージ容量を実際より大きく見せる。", "複数ストレージにまたがる大容量ボリュームを作成する。", "利用者ごとの容量上限を割り当てる。", "重複データを削除して使用効率を高める。"], "ア", "シンプロビジョニングは、実際に確保していない容量も論理的に割り当て、必要時に物理容量を消費します。"],
+  ["フェールソフトとして適切な動作はどれか。", ["警告を出し、処理続行の判断をオペレーターに任せる。", "サービスを順次安全に停止する。", "性能が低下しても処理を継続する。", "データや装置を損なわず運転を停止する。"], "ウ", "フェールソフトは、障害時に機能や性能を縮退させながら処理を継続します。"],
+  ["DBMSでデッドロックを検出するために使われるデータ構造はどれか。", ["資源割当表", "時刻印順管理表", "トランザクションの優先順管理表", "待ちグラフ"], "エ", "待ちグラフでトランザクションと資源の待ち関係を表し、閉路の有無からデッドロックを検出します。"],
+  ["HTTP応答で、指定URLにコンテンツがなく別URLへアクセスし直すよう促すリダイレクトのコードはどれか。", ["204 No Content", "302 Found", "404 Not Found", "501 Not Implemented"], "イ", "302 Foundは、指定されたリソースが一時的に別URLにあることを示すリダイレクトです。"]
+];
+
 const keyToIndex = { "ア": 0, "イ": 1, "ウ": 2, "エ": 3 };
+const explanations2024 = questions2024.map(([, choices, correct]) =>
+  choices.map((_, i) => i === keyToIndex[correct] ? "正解です。" : "この選択肢は、設問が問う概念・方式の定義に該当しません。")
+);
+
 const examSets = [
-  ["2025r07h", "令和7年度（2025年度）春期", "exam-pdfs/2025r07h_sa_am2_qs.pdf", true],
-  ["2024r06h", "令和6年度（2024年度）春期", "exam-pdfs/2024r06h_sa_am2_qs.pdf", false],
+  ["2025r07h", "令和7年度（2025年度）春期", "exam-pdfs/2025r07h_sa_am2_qs.pdf", true, questions, incorrectExplanations],
+  ["2024r06h", "令和6年度（2024年度）春期", "exam-pdfs/2024r06h_sa_am2_qs.pdf", true, questions2024, explanations2024],
   ["2023r05h", "令和5年度（2023年度）春期", "exam-pdfs/2023r05h_sa_am2_qs.pdf", false],
   ["2022r04h", "令和4年度（2022年度）春期", "exam-pdfs/2022r04h_sa_am2_qs.pdf", false],
   ["2021r03h", "令和3年度（2021年度）春期", "exam-pdfs/2021r03h_sa_am2_qs.pdf", false],
@@ -76,7 +108,9 @@ const examSets = [
 ];
 let current = 0;
 let selectedExam = examSets[0];
-const answers = Array(questions.length).fill(null);
+let activeQuestions = questions;
+let activeExplanations = incorrectExplanations;
+let answers = Array(activeQuestions.length).fill(null);
 
 const card = document.querySelector("#questionCard");
 const score = document.querySelector("#score");
@@ -125,20 +159,20 @@ function render() {
     return;
   }
   updateSource();
-  const [text, choices, correct, explanation] = questions[current];
-  const choiceExplanations = incorrectExplanations[current];
+  const [text, choices, correct, explanation] = activeQuestions[current];
+  const choiceExplanations = activeExplanations[current];
   const submitted = answers[current] !== null;
   const selected = submitted ? answers[current].selected : null;
   const isCorrect = submitted && selected === keyToIndex[correct];
-  progressText.textContent = `問${current + 1} / ${questions.length}`;
+  progressText.textContent = `問${current + 1} / ${activeQuestions.length}`;
   statusText.textContent = submitted ? (isCorrect ? "正解" : "不正解") : "未回答";
-  progressBar.style.width = `${((current + 1) / questions.length) * 100}%`;
+  progressBar.style.width = `${((current + 1) / activeQuestions.length) * 100}%`;
   card.innerHTML = `
     <div class="question-number">QUESTION ${String(current + 1).padStart(2, "0")}</div>
     <div class="text-question">
       <div class="original-label">問${current + 1}</div>
       <div class="question-text">${text}</div>
-      ${current === 7 ? '<img class="diagram" src="exam-pages/diagram-q08.jpg" alt="問8の制御フローグラフ">' : ""}
+      ${selectedExam[0] === "2025r07h" && current === 7 ? '<img class="diagram" src="exam-pages/diagram-q08.jpg" alt="問8の制御フローグラフ">' : ""}
     </div>
     <p class="answer-instruction">上の原本にある選択肢から、答えを一つ選んでください。</p>
     <div class="choices">${choices.map((choice, i) => `
@@ -152,7 +186,7 @@ function render() {
   if (!submitted) document.querySelector("#submitButton").addEventListener("click", submit);
   renderDots();
   document.querySelector("#prevButton").disabled = current === 0;
-  document.querySelector("#nextButton").disabled = current === questions.length - 1;
+  document.querySelector("#nextButton").disabled = current === activeQuestions.length - 1;
 }
 
 function submit() {
@@ -166,17 +200,19 @@ function submit() {
 }
 
 function renderDots() {
-  dots.innerHTML = questions.map((_, i) => `<button class="dot ${i === current ? "active" : ""} ${answers[i] ? "done" : ""}" aria-label="問${i + 1}" data-index="${i}">${i + 1}</button>`).join("");
+  dots.innerHTML = activeQuestions.map((_, i) => `<button class="dot ${i === current ? "active" : ""} ${answers[i] ? "done" : ""}" aria-label="問${i + 1}" data-index="${i}">${i + 1}</button>`).join("");
   dots.querySelectorAll(".dot").forEach(button => button.addEventListener("click", () => { current = Number(button.dataset.index); render(); }));
-  score.textContent = answers.filter((answer, i) => answer && answer.selected === keyToIndex[questions[i][2]]).length;
+  score.textContent = answers.filter((answer, i) => answer && answer.selected === keyToIndex[activeQuestions[i][2]]).length;
 }
 
 document.querySelector("#prevButton").addEventListener("click", () => { if (current > 0) { current--; render(); } });
 document.querySelector("#nextButton").addEventListener("click", () => { if (current < questions.length - 1) { current++; render(); } });
 yearSelect.addEventListener("change", () => {
   selectedExam = examSets.find(([id]) => id === yearSelect.value) || examSets[0];
+  activeQuestions = selectedExam[4] || questions;
+  activeExplanations = selectedExam[5] || incorrectExplanations;
   current = 0;
-  answers.fill(null);
+  answers = Array(activeQuestions.length).fill(null);
   render();
 });
 render();
