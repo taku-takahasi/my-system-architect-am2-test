@@ -30,7 +30,7 @@ h1 span { font-weight: 400; opacity: .8; }
 .question-number { color: var(--blue); font-weight: 800; font-size: .9rem; }
 .text-question { margin: 13px 0 25px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #f7f9fb; }
 .original-label { color: var(--muted); background: #f1f5f8; border-bottom: 1px solid var(--line); padding: 8px 12px; font-size: .76rem; font-weight: 700; }
-.text-question .question-text { padding: 18px 18px 4px; margin: 0; }
+.text-question .question-text { padding: 20px clamp(18px, 4vw, 34px) 8px; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.9; }
 .diagram { display: block; width: min(100%, 620px); margin: 4px auto 18px; }
 .answer-instruction { color: var(--muted); font-size: .86rem; margin: 0 0 10px; }
 .choices { display: grid; gap: 11px; }
