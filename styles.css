@@ -42,7 +42,7 @@ h1 span { font-weight: 400; opacity: .8; }
 .question-table tbody th { width: 2.5em; background: #f7f9fb; }
 .diagram { display: block; width: min(100%, 620px); margin: 4px auto 18px; }
 .math-expression { display: inline-flex; align-items: center; gap: .18em; font-family: Georgia, "Times New Roman", serif; font-size: 1.08em; white-space: nowrap; }
-.fraction { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.05; vertical-align: middle; }
+.fraction { display: inline-grid; grid-template-columns: max-content; justify-items: stretch; line-height: 1.05; vertical-align: middle; text-align: center; }
 .fraction > span:first-child { border-bottom: 1px solid currentColor; padding: 0 .18em .08em; }
 .fraction > span:last-child { padding: .08em .18em 0; }
 .answer-instruction { color: var(--muted); font-size: .86rem; margin: 0 0 10px; }
