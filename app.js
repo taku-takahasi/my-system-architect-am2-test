@@ -76,15 +76,16 @@ function render() {
   progressBar.style.width = `${((current + 1) / questions.length) * 100}%`;
   card.innerHTML = `
     <div class="question-number">QUESTION ${String(current + 1).padStart(2, "0")}</div>
-    <div class="original-question">
-      <div class="original-label">原本の問題文（PDFより・問${current + 1}）</div>
-      <img src="exam-pages/questions/q${String(current + 1).padStart(2, "0")}.jpg" alt="原本PDFの問${current + 1}の問題文、図、選択肢">
+    <div class="text-question">
+      <div class="original-label">問${current + 1}</div>
+      <div class="question-text">${text}</div>
+      ${current === 7 ? '<img class="diagram" src="exam-pages/diagram-q08.jpg" alt="問8の制御フローグラフ">' : ""}
     </div>
     <p class="answer-instruction">上の原本にある選択肢から、答えを一つ選んでください。</p>
     <div class="choices">${choices.map((choice, i) => `
       <label class="choice ${submitted ? "disabled" : ""} ${submitted && i === keyToIndex[correct] ? "correct" : ""} ${submitted && i === selected && i !== keyToIndex[correct] ? "incorrect" : ""}">
         <input type="radio" name="answer" value="${i}" ${selected === i ? "checked" : ""} ${submitted ? "disabled" : ""}>
-        <span class="letter">${["ア", "イ", "ウ", "エ"][i]}</span><span>選択肢「${["ア", "イ", "ウ", "エ"][i]}」</span>
+        <span class="letter">${["ア", "イ", "ウ", "エ"][i]}</span><span>${choice}</span>
       </label>`).join("")}</div>
     <div class="submit-row"><button class="primary" id="submitButton" ${submitted ? "disabled" : ""}>この問題を提出</button>${submitted ? `<span>${isCorrect ? "正解です。" : `不正解。正解は「${correct}」です。`}</span>` : ""}</div>
     ${submitted ? `<div class="feedback ${isCorrect ? "correct" : "incorrect"}"><strong>${isCorrect ? "正解" : "解説"}</strong><div class="explanation">${explanation}</div><div class="choice-explanations"><strong>選択肢ごとの判定</strong>${choices.map((choice, i) => `<div class="choice-explanation ${i === keyToIndex[correct] ? "right" : ""}"><b>${["ア", "イ", "ウ", "エ"][i]}：${i === keyToIndex[correct] ? "正解" : "不正解"}</b> ${choiceExplanations[i]}</div>`).join("")}</div></div>` : ""}
