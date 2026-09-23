@@ -559,6 +559,61 @@ const examSets = [
   ["2010h22a", "平成22年度（2010年度）秋期", "exam-pdfs/2010h22a_sa_am2_qs.pdf", true, questions2010, explanations2010],
   ["2009h21a", "平成21年度（2009年度）秋期", "exam-pdfs/2009h21a_sa_am2_qs.pdf", true, questions2009, explanations2009]
 ];
+
+const duplicateQuestionGroups = [
+  [["2025r07h", 1], ["2016h28a", 3], ["2012h24a", 1]],
+  [["2025r07h", 4], ["2015h27a", 6]],
+  [["2025r07h", 9], ["2021r03h", 8]],
+  [["2025r07h", 10], ["2015h27a", 12]],
+  [["2025r07h", 11], ["2016h28a", 13]],
+  [["2025r07h", 13], ["2021r03h", 14]],
+  [["2025r07h", 19], ["2021r03h", 20], ["2017h29a", 25]],
+  [["2024r06h", 1], ["2017h29a", 1]],
+  [["2024r06h", 2], ["2022r04h", 4]],
+  [["2024r06h", 4], ["2015h27a", 7]],
+  [["2024r06h", 5], ["2022r04h", 6]],
+  [["2024r06h", 6], ["2019h31a", 8]],
+  [["2024r06h", 9], ["2014h26a", 11]],
+  [["2024r06h", 15], ["2022r04h", 14]],
+  [["2024r06h", 16], ["2022r04h", 16]],
+  [["2024r06h", 17], ["2019h31a", 23]],
+  [["2024r06h", 18], ["2017h29a", 24]],
+  [["2024r06h", 19], ["2021r03h", 18]],
+  [["2023r05h", 1], ["2021r03h", 1]],
+  [["2023r05h", 2], ["2019h31a", 1]],
+  [["2023r05h", 5], ["2019h31a", 4]],
+  [["2023r05h", 7], ["2019h31a", 12]],
+  [["2023r05h", 8], ["2018h30a", 6]],
+  [["2023r05h", 14], ["2021r03h", 15], ["2018h30a", 15]],
+  [["2023r05h", 15], ["2017h29a", 16]],
+  [["2023r05h", 17], ["2019h31a", 24], ["2011h23a", 24]],
+  [["2023r05h", 22], ["2017h29a", 19]],
+  [["2022r04h", 2], ["2019h31a", 3], ["2017h29a", 5]],
+  [["2022r04h", 5], ["2015h27a", 5], ["2013h25a", 4], ["2010h22a", 3]],
+  [["2022r04h", 7], ["2010h22a", 2]],
+  [["2022r04h", 9], ["2019h31a", 11]],
+  [["2021r03h", 9], ["2018h30a", 12]],
+  [["2021r03h", 17], ["2018h30a", 23]],
+  [["2021r03h", 23], ["2015h27a", 19]],
+  [["2019h31a", 2], ["2016h28a", 4]],
+  [["2019h31a", 22], ["2017h29a", 22]],
+  [["2018h30a", 9], ["2015h27a", 8]],
+  [["2017h29a", 13], ["2015h27a", 13]],
+  [["2016h28a", 5], ["2011h23a", 2]],
+  [["2015h27a", 17], ["2011h23a", 17]],
+  [["2015h27a", 24], ["2011h23a", 25]],
+  [["2014h26a", 2], ["2012h24a", 3]],
+  [["2014h26a", 3], ["2012h24a", 4]],
+  [["2013h25a", 23], ["2011h23a", 22]]
+];
+
+const duplicateQuestionYears = new Map(
+  duplicateQuestionGroups.flatMap((group) => {
+    const years = group.map(([id]) => examSets.find(([examId]) => examId === id)[1].match(/20\d{2}/)[0]);
+    return group.map(([id, question]) => [`${id}-${question}`, years]);
+  })
+);
+
 let current = 0;
 let selectedExam = examSets[0];
 let activeQuestions = questions;
@@ -620,12 +675,14 @@ function render() {
   const submitted = answers[current] !== null;
   const selected = submitted ? answers[current].selected : null;
   const isCorrect = submitted && selected === keyToIndex[correct];
+  const duplicateYears = duplicateQuestionYears.get(`${selectedExam[0]}-${current + 1}`);
+  const questionLabel = `問${current + 1}${duplicateYears ? `（${duplicateYears.join("、")}）` : ""}`;
   progressText.textContent = `問${current + 1} / ${activeQuestions.length}`;
   statusText.textContent = submitted ? (isCorrect ? "正解" : "不正解") : "未回答";
   progressBar.style.width = `${((current + 1) / activeQuestions.length) * 100}%`;
   card.innerHTML = `
     <div class="text-question">
-      <div class="original-label">問${current + 1}</div>
+      <div class="original-label">${questionLabel}</div>
       <div class="question-text">${text}</div>
       ${selectedExam[0] === "2025r07h" && current === 7 ? '<img class="diagram" src="exam-pages/diagram-q08.jpg" alt="問8の制御フローグラフ">' : ""}
       ${selectedExam[0] === "2015h27a" && current === 1 ? '<img class="diagram" src="exam-pages/questions/q02-2015.jpg" alt="問2のクラスPにおける操作の可視性を示すUMLクラス図">' : ""}
