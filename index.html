@@ -13,6 +13,7 @@
         <h1>システムアーキテクト試験 <span>午前II</span></h1>
       </div>
       <div class="score" aria-live="polite"><strong id="score">0</strong><span> / 25 正解</span></div>
+      <button id="notesListButton" class="header-action" type="button" aria-controls="notesPanel">メモ一覧</button>
     </header>
 
     <main class="layout">
@@ -43,6 +44,7 @@
         </object>
         <p class="source-note">問題文の図・数式は、必要に応じて元の問題冊子で確認できます。</p>
       </aside>
+      <section id="notesPanel" class="notes-panel" aria-labelledby="notesPanelHeading" hidden></section>
     </main>
     <script src="app.js"></script>
   </body>

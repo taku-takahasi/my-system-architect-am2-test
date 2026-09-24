@@ -633,6 +633,10 @@ const examLabel = document.querySelector("#examLabel");
 const sourcePdf = document.querySelector("#sourcePdf");
 const sourceLink = document.querySelector("#sourceLink");
 const sourceFallback = document.querySelector("#sourceFallback");
+const quizPanel = document.querySelector(".quiz-panel");
+const sourcePanel = document.querySelector(".source-panel");
+const notesPanel = document.querySelector("#notesPanel");
+const notesListButton = document.querySelector("#notesListButton");
 
 yearSelect.innerHTML = examSets.map(([id, label, pdf, ready]) =>
   `<option value="${id}" ${ready ? "" : "data-pending"}>${label}${id === "2020r02" ? "（試験未実施）" : ready ? "" : "（問題ページ準備中）"}</option>`
@@ -693,6 +697,17 @@ function deleteNote(examId, questionIndex) {
   }
 }
 
+function deleteAllNotes() {
+  try {
+    localStorage.removeItem(notesStorageKey);
+    notes = {};
+    return true;
+  } catch (error) {
+    console.error("メモを一括削除できませんでした。", error);
+    return false;
+  }
+}
+
 function escapeHtml(text) {
   return text.replace(/[&<>"']/g, character => ({
     "&": "&amp;",
@@ -701,6 +716,81 @@ function escapeHtml(text) {
     '"': "&quot;",
     "'": "&#39;"
   })[character]);
+}
+
+function renderNotesList() {
+  const entries = Object.entries(notes)
+    .flatMap(([examId, examNotes]) => Object.entries(examNotes)
+      .filter(([, text]) => typeof text === "string" && text.trim())
+      .map(([questionIndex, text]) => ({ examId, questionIndex: Number(questionIndex), text })))
+    .map(({ examId, questionIndex, text }) => {
+      const examIndex = examSets.findIndex(([id]) => id === examId);
+      const exam = examSets[examIndex];
+      const question = exam?.[4]?.[questionIndex];
+      return {
+        examId,
+        examIndex,
+        questionIndex,
+        examLabel: exam?.[1] || "削除された年度",
+        questionText: question?.[0]?.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim() || "問題文を表示できません。",
+        text
+      };
+    })
+    .sort((a, b) => a.examIndex - b.examIndex || a.questionIndex - b.questionIndex);
+
+  notesPanel.innerHTML = `
+    <div class="notes-panel-heading">
+      <div><p class="eyebrow">Saved notes</p><h2 id="notesPanelHeading">メモ一覧</h2></div>
+      <div class="notes-panel-actions">
+        <p>${entries.length}件のメモ</p>
+        ${entries.length ? '<button id="deleteAllNotesButton" class="danger" type="button">すべて削除</button>' : ""}
+      </div>
+    </div>
+    ${entries.length
+      ? `<div class="notes-list">${entries.map(({ examId, questionIndex, examLabel, questionText, text }) => `
+          <article class="note-list-item">
+            <p class="note-list-meta">${escapeHtml(examLabel)} / 問${questionIndex + 1}</p>
+            <p class="note-list-question">${escapeHtml(questionText)}</p>
+            <p class="note-list-text">${escapeHtml(text)}</p>
+            <div class="note-list-actions">
+              <button class="secondary" type="button" data-open-exam-id="${escapeHtml(examId)}" data-question-index="${questionIndex}">この問題を開く</button>
+              <button class="danger" type="button" data-delete-exam-id="${escapeHtml(examId)}" data-question-index="${questionIndex}">メモを削除</button>
+            </div>
+          </article>`).join("")}</div>`
+      : '<p class="notes-empty">保存済みのメモはありません。問題画面のメモ欄に入力すると、ここに一覧表示されます。</p>'}
+  `;
+  notesPanel.querySelectorAll("[data-open-exam-id]").forEach(button => button.addEventListener("click", () => {
+    const exam = examSets.find(([id]) => id === button.dataset.openExamId);
+    if (!exam?.[3]) return;
+    selectedExam = exam;
+    activeQuestions = selectedExam[4];
+    activeExplanations = selectedExam[5];
+    current = Number(button.dataset.questionIndex);
+    answers = Array(activeQuestions.length).fill(null);
+    yearSelect.value = selectedExam[0];
+    setNotesView(false);
+    render();
+  }));
+  notesPanel.querySelectorAll("[data-delete-exam-id]").forEach(button => button.addEventListener("click", () => {
+    if (deleteNote(button.dataset.deleteExamId, Number(button.dataset.questionIndex))) {
+      renderNotesList();
+    }
+  }));
+  notesPanel.querySelector("#deleteAllNotesButton")?.addEventListener("click", () => {
+    if (!window.confirm("保存済みのメモをすべて削除します。この操作は元に戻せません。")) return;
+    if (deleteAllNotes()) {
+      renderNotesList();
+    }
+  });
+}
+
+function setNotesView(show) {
+  quizPanel.hidden = show;
+  sourcePanel.hidden = show;
+  notesPanel.hidden = !show;
+  notesListButton.textContent = show ? "問題に戻る" : "メモ一覧";
+  notesListButton.setAttribute("aria-expanded", String(show));
+  if (show) renderNotesList();
 }
 
 function render() {
@@ -829,6 +919,7 @@ function renderDots() {
 
 document.querySelector("#prevButton").addEventListener("click", () => { if (current > 0) { current--; render(); } });
 document.querySelector("#nextButton").addEventListener("click", () => { if (current < activeQuestions.length - 1) { current++; render(); } });
+notesListButton.addEventListener("click", () => setNotesView(notesPanel.hidden));
 yearSelect.addEventListener("change", () => {
   selectedExam = examSets.find(([id]) => id === yearSelect.value) || examSets[0];
   activeQuestions = selectedExam[4] || questions;
