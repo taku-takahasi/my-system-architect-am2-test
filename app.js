@@ -619,6 +619,8 @@ let selectedExam = examSets[0];
 let activeQuestions = questions;
 let activeExplanations = incorrectExplanations;
 let answers = Array(activeQuestions.length).fill(null);
+const notesStorageKey = "system-architect-am2-question-notes-v1";
+let notes = loadNotes();
 
 const card = document.querySelector("#questionCard");
 const score = document.querySelector("#score");
@@ -653,6 +655,54 @@ function updateSource() {
   return ready;
 }
 
+function loadNotes() {
+  try {
+    const savedNotes = localStorage.getItem(notesStorageKey);
+    if (!savedNotes) return {};
+    const parsedNotes = JSON.parse(savedNotes);
+    return parsedNotes && typeof parsedNotes === "object" && !Array.isArray(parsedNotes) ? parsedNotes : {};
+  } catch (error) {
+    console.error("メモを読み込めませんでした。", error);
+    return {};
+  }
+}
+
+function saveNote(examId, questionIndex, text) {
+  const updatedNotes = { ...notes, [examId]: { ...notes[examId], [questionIndex]: text } };
+  try {
+    localStorage.setItem(notesStorageKey, JSON.stringify(updatedNotes));
+    notes = updatedNotes;
+    return true;
+  } catch (error) {
+    console.error("メモを保存できませんでした。", error);
+    return false;
+  }
+}
+
+function deleteNote(examId, questionIndex) {
+  const examNotes = { ...notes[examId] };
+  delete examNotes[questionIndex];
+  const updatedNotes = { ...notes, [examId]: examNotes };
+  try {
+    localStorage.setItem(notesStorageKey, JSON.stringify(updatedNotes));
+    notes = updatedNotes;
+    return true;
+  } catch (error) {
+    console.error("メモを削除できませんでした。", error);
+    return false;
+  }
+}
+
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
 function render() {
   if (!selectedExam[3]) {
     updateSource();
@@ -675,6 +725,7 @@ function render() {
   const submitted = answers[current] !== null;
   const selected = submitted ? answers[current].selected : null;
   const isCorrect = submitted && selected === keyToIndex[correct];
+  const note = notes[selectedExam[0]]?.[current] || "";
   const duplicateYears = duplicateQuestionYears.get(`${selectedExam[0]}-${current + 1}`);
   const questionLabel = `問${current + 1}${duplicateYears ? `（${duplicateYears.join("、")}）` : ""}`;
   progressText.textContent = `問${current + 1} / ${activeQuestions.length}`;
@@ -721,8 +772,33 @@ function render() {
       </label>`).join("")}</div>
     <div class="submit-row"><button class="primary" id="submitButton" ${submitted ? "disabled" : ""}>この問題を提出</button>${submitted ? `<span>${isCorrect ? "正解です。" : `不正解。正解は「${correct}」です。`}</span>` : ""}</div>
     ${submitted ? `<div class="feedback ${isCorrect ? "correct" : "incorrect"}"><strong>${isCorrect ? "正解" : "解説"}</strong><div class="explanation">${explanation}</div><div class="choice-explanations"><strong>選択肢ごとの判定</strong>${choices.map((choice, i) => `<div class="choice-explanation ${i === keyToIndex[correct] ? "right" : ""}"><b>${["ア", "イ", "ウ", "エ"][i]}：${i === keyToIndex[correct] ? "正解" : "不正解"}</b> ${choiceExplanations[i]}</div>`).join("")}</div></div>` : ""}
+    <section class="question-note" aria-labelledby="noteHeading">
+      <div class="note-heading"><h2 id="noteHeading">メモ</h2><span id="noteStatus" aria-live="polite">入力内容はこのブラウザに自動保存されます</span></div>
+      <textarea id="noteText" rows="5" placeholder="この問題のポイントや復習内容を記録できます。" aria-describedby="noteStatus">${escapeHtml(note)}</textarea>
+      <div class="note-actions"><button id="deleteNoteButton" class="secondary" ${note ? "" : "disabled"}>メモを削除</button></div>
+    </section>
   `;
   if (!submitted) document.querySelector("#submitButton").addEventListener("click", submit);
+  const noteText = document.querySelector("#noteText");
+  const noteStatus = document.querySelector("#noteStatus");
+  const deleteNoteButton = document.querySelector("#deleteNoteButton");
+  noteText.addEventListener("input", () => {
+    if (saveNote(selectedExam[0], current, noteText.value)) {
+      noteStatus.textContent = "保存しました";
+      deleteNoteButton.disabled = noteText.value.length === 0;
+    } else {
+      noteStatus.textContent = "メモを保存できませんでした。ブラウザの保存設定を確認してください。";
+    }
+  });
+  deleteNoteButton.addEventListener("click", () => {
+    if (deleteNote(selectedExam[0], current)) {
+      noteText.value = "";
+      deleteNoteButton.disabled = true;
+      noteStatus.textContent = "メモを削除しました";
+    } else {
+      noteStatus.textContent = "メモを削除できませんでした。ブラウザの保存設定を確認してください。";
+    }
+  });
   renderDots();
   document.querySelector("#prevButton").disabled = current === 0;
   document.querySelector("#nextButton").disabled = current === activeQuestions.length - 1;

@@ -71,6 +71,13 @@ button:disabled { opacity: .45; cursor: not-allowed; }
 .choice-explanation { font-size: .9rem; line-height: 1.65; padding: 7px 9px; border-radius: 5px; }
 .choice-explanation.right { background: #d9f2e6; color: #075c40; }
 .choice-explanation b { margin-right: 4px; }
+.question-note { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+.note-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.note-heading h2 { font-size: 1rem; }
+.note-heading span { color: var(--muted); font-size: .78rem; }
+.question-note textarea { display: block; width: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 7px; padding: 11px 12px; color: var(--ink); background: white; font: inherit; line-height: 1.6; }
+.question-note textarea:focus { outline: 2px solid #86bde0; outline-offset: 1px; border-color: var(--blue); }
+.note-actions { display: flex; justify-content: flex-end; margin-top: 10px; }
 .pager { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 18px; }
 .dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
 .dot { width: 25px; height: 25px; padding: 0; border-radius: 50%; font-size: .68rem; color: var(--muted); background: #e1e9ef; }
@@ -92,4 +99,5 @@ button:disabled { opacity: .45; cursor: not-allowed; }
   .question-card { min-height: 0; padding: 20px 16px; }
   .pager { flex-wrap: wrap; }
   .dots { order: 3; width: 100%; }
+  .note-heading { align-items: flex-start; flex-direction: column; gap: 4px; }
 }
